@@ -1,0 +1,14 @@
+# Use an official SageMaker TensorFlow training image for TensorFlow 2.3, Python 3.8, CPU only
+FROM 763104351884.dkr.ecr.us-east-2.amazonaws.com/pytorch-training:2.2.0-cpu-py310-ubuntu20.04-ec2
+
+# Set up the environment
+WORKDIR /root
+
+# Install Jupyter (if not included)
+RUN pip install jupyter
+
+# Copy the local notebook files into the container
+COPY . /root
+
+# Set the command to start Jupyter Notebook
+CMD ["jupyter", "notebook", "--ip='0.0.0.0'", "--port=8888", "--no-browser", "--allow-root"]

@@ -2,6 +2,7 @@
 
 
 ######################################################################################
+# https://github.com/PredictIf/sagemaker-local
 git init
 git add .
 git commit -m "first commit"

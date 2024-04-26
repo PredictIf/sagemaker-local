@@ -5,11 +5,12 @@ including installed software and libraries, file structure and permissions, envi
 
 - [Amazon SageMaker Notebook Container](#amazon-sagemaker-notebook-container)
   - [Background](#background)
-      - [Why Docker image?](#why-docker-image)
+      - [Why a Docker image?](#why-a-docker-image)
   - [Prerequisites](#prerequisites)
       - [Docker](#docker)
       - [AWS Credentials](#aws-credentials)
-  - [Run Container](#run-container)
+  - [Build The Image](#build-the-image)
+  - [Run The Container](#run-the-container)
       - [Using `docker`](#using-docker)
       - [Using `docker-compose`](#using-docker-compose)
       - [Accessing Jupyter Notebook](#accessing-jupyter-notebook)
@@ -21,32 +22,30 @@ including installed software and libraries, file structure and permissions, envi
 
 
 ## Background
-Amazon SageMaker provides an AWS-hosted Notebook instance, a notably convenient way for any data scientists or developers to access a complete server for working with Amazon SageMaker.
+Amazon SageMaker provides us with an AWS-hosted Notebook instance, offering a convenient server environment for data scientists and developers like us to utilize its features.
 
-Nonetheless, it costs money, requires all data to be uploaded online, requires Internet access and especially AWS Console sign-in, and can be difficult to customize.
+However, this service incurs costs, requires us to upload data online, demands Internet access and AWS Console login, and poses challenges in customization.
 
-To overcome these drawbacks, this Docker container has been created to offer a similar setup usable locally on a laptop/desktop.
+To address these issues, we have developed a Docker container to provide a similar environment locally on our laptops or desktops.
 
-The replicated features include full Jupyter Notebook and Lab server, multiple kernels, AWS & SageMaker SDKs, AWS and Docker CLIs, Git integration, Conda and SageMaker Examples Tabs.
+This local setup replicates the functionalities of the AWS-hosted instance, including a complete Jupyter Notebook and Lab server, support for multiple kernels, integration with AWS & SageMaker SDKs, AWS and Docker CLIs, Git, Conda, and SageMaker Examples Tabs.
 
-The AWS-hosted instance and the local container aren't mutually exclusive and should be used together to enhance the data science experience.
+Both the AWS-hosted instance and our local Docker container complement each other, enhancing our overall data science experience.
 
-#### Why Docker image?
-The most important aim is to achieve a repeatable setup that can be replicated in any laptop or server.
+#### Why a Docker image?
+Our primary goal is to create a repeatable setup that can be easily deployed on any laptop or server.
 
-Most features can be replicated by installing and configuring your laptop/desktop directly.
+While most features can be directly installed on a laptop or desktop, this method often leads to maintenance challenges with each update of libraries and tools.
 
-However, this comes at a cost of maintenance headache, each time the libraries and tools are upgraded, you have to manage those upgrades yourselves.
+Moreover, when we work in teams, differences in machine setups can lead to compatibility issues, where applications functioning on one machine might fail on another.
 
-Additionally, if you work in a team, different machines are set up differently, leading to incompatibility issues, what works in 1 machine may not work in another.
-
+By using a Docker image, we can ensure that all team members have the same environment, regardless of their operating system or machine specifications.
 
 ## Prerequisites
 
 #### Docker
 
-At the minimum, you'll need [Docker](https://docs.docker.com/install/#supported-platforms) engine installed and an account on [Docker Hub](https://hub.docker.com/).
-In these example scripts, we use `dataquadrant` as the Docker Hub account, you can replace it with your own account.
+At the minimum, you'll need [Docker](https://docs.docker.com/install/#supported-platforms) engine installed and an account on [Docker Hub](https://hub.docker.com/). In these example scripts, we use `dataquadrant` as the Docker Hub account, you can replace it with your own account.
 
 #### AWS Credentials
 For AWS SDK and CLI to work, you need to have AWS Credentials configured in the notebook.
@@ -65,8 +64,13 @@ aws configure --profile default-api
 
 When running a container later on, you just need to add this volume mount `-v ~/.aws:/home/ec2-user/.aws:ro` (For Windows, replace `~` with `%USERPROFILE%`).
 
+## Build The Image
 
-## Run Container
+1. Build the base image using one of command provided in `build-base-image.sh`
+2. Build the final image using one of command provided in `build-env-image-all.sh`
+
+
+## Run The Container
 
 #### Using `docker`
 The simplest way to start the `sagemaker-notebook-container` is to use `docker run` command:
@@ -74,7 +78,7 @@ The simplest way to start the `sagemaker-notebook-container` is to use `docker r
 **Unix:**
 ```bash
 export CONTAINER_NAME=sagemaker-notebook-container
-export IMAGE_NAME=dataquadrant/sagemaker-notebook:tensorflow-p36
+export IMAGE_NAME=<change it to your image name>
 export WORKDDIR=/home/ec2-user
 export AWS_PROFILE=default-api
 
@@ -94,7 +98,7 @@ you can use `docker-compose.yml` file so that you don't have to type the full do
 version: "3"
 services:
   sagemaker-notebook-container:
-    image: dataquadrant/sagemaker-notebook:tensorflow-p36
+    image: <change it to your image name>
     container_name: sagemaker-notebook-container
     ports:
       - 8888:8888
@@ -170,7 +174,7 @@ To save all work created in the container, mount a directory to act as the `Sage
 
 ## Sample scripts
 Following sample scripts have been provided to show an example of running a container using `dataquadrant/sagemaker-notebook:python3` image:
-1. `run-python3-container.sh`:
+
 ```bash
 docker run -t --name=sagemaker-notebook-container && \
            -p 8888:8888 && \
@@ -180,7 +184,10 @@ docker run -t --name=sagemaker-notebook-container && \
            -v /Users/foobar/projects/SageMaker:/home/ec2-user/SageMaker && \
            dataquadrant/sagemaker-notebook:python3
 ```
-2. `docker-compose.yml`:
+
+
+
+`docker-compose.yml`:
 ```yaml
 version: "3"
 services:
@@ -198,8 +205,9 @@ services:
       - /Users/foobar/projects/SageMaker:/home/ec2-user/SageMaker    # For saving work in a host directory
 ```
 *(Replace `/Users/foobar/projects/SageMaker` with the appropriate folder from your own machine)*
+<!-- *(Replace `dataquadrant/sagemaker-notebook:python3` with the name of the container image built in the first step)* -->
 
-With that, the container can be started using:
+The container can be started using:
 ```bash
 docker-compose up sagemaker-notebook-container
 ```

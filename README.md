@@ -47,6 +47,8 @@ By using a Docker image, we can ensure that all team members have the same envir
 
 At the minimum, you'll need [Docker](https://docs.docker.com/install/#supported-platforms) engine installed and an account on [Docker Hub](https://hub.docker.com/). In these example scripts, we use `dataquadrant` as the Docker Hub account, you can replace it with your own account.
 
+You should also have a basic understanding of Docker commands and Docker Compose.
+
 #### AWS Credentials
 For AWS SDK and CLI to work, you need to have AWS Credentials configured in the notebook.
 

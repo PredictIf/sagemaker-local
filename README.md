@@ -5,7 +5,6 @@ including installed software and libraries, file structure and permissions, envi
 
 - [Amazon SageMaker Notebook Container](#amazon-sagemaker-notebook-container)
   - [Background](#background)
-      - [Why a Docker image?](#why-a-docker-image)
   - [Prerequisites](#prerequisites)
       - [Docker](#docker)
       - [AWS Credentials](#aws-credentials)
@@ -32,7 +31,7 @@ This local setup replicates the functionalities of the AWS-hosted instance, incl
 
 Both the AWS-hosted instance and our local Docker container complement each other, enhancing our overall data science experience.
 
-#### Why a Docker image?
+<!-- #### Why a Docker image? -->
 Our primary goal is to create a repeatable setup that can be easily deployed on any laptop or server.
 
 While most features can be directly installed on a laptop or desktop, this method often leads to maintenance challenges with each update of libraries and tools.
